@@ -85,6 +85,14 @@ class FnSym extends Sym {
         return paramTypes;
     }
 
+    public void setParamSpace(int paramSpace) {
+        this.paramSpace = paramSpace;
+    }
+
+    public void setLocalSpace(int localSpace) {
+        this.localSpace = localSpace;
+    }
+
     public String toString() {
         // make list of formals
         String str = "";

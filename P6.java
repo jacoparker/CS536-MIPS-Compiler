@@ -161,6 +161,10 @@ public class P6 {
 		// TODO: Calling codeGen   //
 		//////////////////////////
 
+		// for now call unparse
+
+		astRoot.unparse(outFile, 0);
+
 		return P6.RESULT_CORRECT;
 	}
 
