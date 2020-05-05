@@ -1,6 +1,6 @@
+int global;
+int global2;
 
-int main() {
-    int i;
-    i = 1;
-    cout << i;
+void main() {
+
 }

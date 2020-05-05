@@ -119,6 +119,7 @@ class Common {
     // used for determining if variables are local or global
     public static boolean inFunction = false;
 
+    public static int globalDataOffset = 0;
 }
 
 abstract class ASTnode {
@@ -162,6 +163,19 @@ class ProgramNode extends ASTnode {
 
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
+    }
+
+    public void codeGen(PrintWriter p) {
+        // setup Codegen class with current printwriter
+        Codegen.p = p;
+        // make main global
+        // p.println("    .globl main\n");  // 19 chars
+        // perform one pass for global vars
+        p.println("    .data");
+        myDeclList.firstCodeGen(p);
+        // traverse tree, generate code :o
+        p.println("\n    .text");
+        myDeclList.codeGen(p);
     }
 
     // 1 kid
@@ -217,6 +231,20 @@ class DeclListNode extends ASTnode {
         } catch (NoSuchElementException ex) {
             System.err.println("unexpected NoSuchElementException in DeclListNode.print");
             System.exit(-1);
+        }
+    }
+
+    public void firstCodeGen(PrintWriter p) {
+        for (DeclNode node : myDecls) {
+            if (node instanceof VarDeclNode) {
+                ((VarDeclNode)node).globalVarCodeGen(p);
+            }
+        }
+    }
+
+    public void codeGen(PrintWriter p) {
+        for (DeclNode node : myDecls) {
+            node.codeGen(p);
         }
     }
 
@@ -419,6 +447,9 @@ abstract class DeclNode extends ASTnode {
 
     // default version of typeCheck for non-function decls
     public void typeCheck() { }
+
+    // default version of codeGen
+    public void codeGen(PrintWriter p) { }
 }
 
 class VarDeclNode extends DeclNode {
@@ -534,6 +565,29 @@ class VarDeclNode extends DeclNode {
         p.print(" ");
         p.print(myId.name());
         p.println(";");
+    }
+
+    public void globalVarCodeGen(PrintWriter p) {
+        if (myType instanceof IntNode || myType instanceof BoolNode) {
+            if (!myId.sym().isLocal()) {
+                String line = myId.name() + ": .space 4";
+                p.println(line);
+            }
+        } else {
+            ErrMsg.fatal(myId.lineNum(), myId.charNum(), "Unsupported Type. Exiting...");
+            System.exit(-1);
+        }
+    }
+
+    @Override
+    public void codeGen(PrintWriter p) {
+        if (myType instanceof IntNode || myType instanceof BoolNode) {
+            if (myId.sym().isLocal())
+                p.println(myId.name() + ": .space 4");
+        } else {
+            ErrMsg.fatal(myId.lineNum(), myId.charNum(), "Unsupported Type. Exiting...");
+            System.exit(-1);
+        }
     }
 
     // 3 kids
@@ -660,9 +714,87 @@ class FnDeclNode extends DeclNode {
         p.print(((FnSym)myId.sym()).getLocalSpace());
         p.println(" Bytes)");
         myBody.unparse(p, indent+4);
-        p.println("}\n");
+        p.println("}\n");   
+    }
 
+    @Override
+    public void codeGen(PrintWriter p) {
+        // write the label (func name)
+        // f:
+        p.println(myId.name() + ":");
+        // write function body with indent
+        // sw $ra 0($sp)
+        // subu $sp $sp 4
+        // sw $fp 0($sp)
+        // subu $sp $sp 4
+        // subu $sp $sp localSize
+        // addu $fp $sp newFPOffset
+        // function prologue
+        Codegen.generateWithComment(
+            Codegen.SW,               // opcode for store word
+            "Store return address",   // comment
+            Codegen.RA,               // register to store, return address
+            "0(" + Codegen.SP + ")"   // memory address to store at
+        );
+        Codegen.generate(
+            Codegen.SUBU,             // opcode for subtract
+            Codegen.SP,               // stack pointer
+            Codegen.SP,               // stack pointer
+            "4"
+        );
+        Codegen.generateWithComment(
+            Codegen.SW,                  // opcode for store word
+            "Store old frame pointer",   // comment
+            Codegen.FP,                  // register to store, frame pointer
+            "0(" + Codegen.SP + ")"      // memory address to store at
+        );
+        Codegen.generate(
+            Codegen.SUBU,             // opcode for subtract
+            Codegen.SP,               // stack pointer
+            Codegen.SP,               // stack pointer
+            "4"
+        );
+        Codegen.generate(
+            Codegen.ADDU,
+            Codegen.FP,
+            Codegen.SP,
+            "8"
+        );
+        // make room for function locals TODO
         
+        // function body TODO
+
+        // function epilogue
+        // lw $ra, 0($fp)
+        // move $t0, $fp	
+        // lw $fp, -4($fp)
+        // move $sp, $t0
+        // jr $ra
+        Codegen.generateWithComment(
+            Codegen.LW,                  // opcode for load word
+            "Load old return address",   // comment
+            Codegen.RA,                  // register to load to
+            "0(" + Codegen.FP + ")"      // memory address of old return
+        );
+        Codegen.generate(
+            Codegen.MOVE,
+            Codegen.T0,
+            Codegen.FP
+        );
+        Codegen.generate(
+            Codegen.LW,
+            Codegen.FP,
+            "-4(" + Codegen.FP + ")"
+        );
+        Codegen.generate(
+            Codegen.MOVE,  
+            Codegen.SP, 
+            Codegen.T0
+        );
+        Codegen.generate(
+            Codegen.JR,
+            Codegen.RA
+        );
     }
 
     // 4 kids

@@ -163,7 +163,8 @@ public class P6 {
 
 		// for now call unparse
 
-		astRoot.unparse(outFile, 0);
+		// astRoot.unparse(outFile, 0);
+		astRoot.codeGen(outFile);
 
 		return P6.RESULT_CORRECT;
 	}
