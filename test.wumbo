@@ -1,6 +1,23 @@
-int global;
-int global2;
+///int global;
+///int global2;
 
 void main() {
-
+    int local1;
+    int local2;
+    cout << "Here is an int!\n";
+    cout << 1203;
+    cout << "\nHere is false!\n";
+    cout << false;
+    cout << "\nHere is True!\n";
+    cout << true;
 }
+
+
+
+///void func() {
+///    int local4;
+///    int local5;
+///}
+///
+///int global3;
+///bool global4;
