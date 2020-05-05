@@ -148,6 +148,8 @@ public class P6 {
 		astRoot.nameAnalysis();	 // perform name analysis
 		if (ErrMsg.getErr()) {
 			return P6.RESULT_NAME_ANALYSIS_ERROR;
+		} else if (!Common.mainDefined) {
+			ErrMsg.fatal(0, 0, "No main function");
 		}
 
 		astRoot.typeCheck();

@@ -106,6 +106,15 @@ import java.util.*;
 // %%%ASTnode class (base class for all other kinds of nodes)
 // **********************************************************************
 
+/**
+ * Common utilities for name analysis, type checking and code gen.
+ */
+class Common {
+
+    public static boolean mainDefined = false;
+
+}
+
 abstract class ASTnode {
     // every subclass must provide an unparse operation
     abstract public void unparse(PrintWriter p, int indent);
@@ -538,6 +547,10 @@ class FnDeclNode extends DeclNode {
         String name = myId.name();
         FnSym sym = null;
         Sym symCheckMul = null;
+
+        if (name.equals("main")) {
+            Common.mainDefined = true;
+        }
 
         try {
             symCheckMul = symTab.lookupLocal(name);

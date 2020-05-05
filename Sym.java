@@ -6,9 +6,25 @@ import java.util.*;
  */
 public class Sym {
     private Type type;
+    private boolean isLocal;
+    private int funcOffset;  // only need if isLocal is true
+
+    public Sym(Type type, boolean isLocal, int offset) {
+        this.type = type;
+        this.isLocal = isLocal;
+        this.funcOffset = offset;
+    }
 
     public Sym(Type type) {
-        this.type = type;
+        this(type, false, 0);
+    }
+
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public int getFuncOffSet() {
+        return funcOffset;
     }
 
     public Type getType() {
@@ -30,15 +46,31 @@ class FnSym extends Sym {
     private Type returnType;
     private int numParams;
     private List<Type> paramTypes;
+    private int paramSpace;
+    private int localSpace;
 
-    public FnSym(Type type, int numparams) {
+    public FnSym(Type type, int numparams, int paramSpace, int localSpace) {
         super(new FnType());
         returnType = type;
         numParams = numparams;
+        this.paramSpace = paramSpace;
+        this.localSpace = localSpace;
+    }
+
+    public FnSym(Type type, int numparams) {
+        this(type, numparams, 0, 0);
     }
 
     public void addFormals(List<Type> L) {
         paramTypes = L;
+    }
+
+    public int getParamSpace() {
+        return paramSpace;
+    }
+
+    public int getLocalSpace() {
+        return localSpace;
     }
 
     public Type getReturnType() {
