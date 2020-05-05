@@ -1138,6 +1138,10 @@ class AssignStmtNode extends StmtNode {
         p.println(";");
     }
 
+    public void codeGen(PrintWriter p) {
+        myAssign.codeGen(p);
+    }
+
     // 1 kid
     private AssignNode myAssign;
 }
@@ -1337,12 +1341,7 @@ class WriteStmtNode extends StmtNode {
             // push the exp result on stack
             String expLoc = myExp.codeGen(p);
             // we assume result is on the stack.
-            Codegen.generateWithComment(
-                Codegen.LW,
-                "Load expression's result",
-                Codegen.A0,
-                "4(" + Codegen.SP + ")"
-            );
+            Codegen.genPop(Codegen.A0);
             Codegen.generateWithComment(
                 Codegen.SYSCALL,
                 "System call execute"
@@ -2030,8 +2029,28 @@ class IdNode extends ExpNode {
         }
     }
 
+    public String codeGenAssign(PrintWriter p) {
+        int off = 8 + mySym.getFuncOffSet();
+        String address = "-" + off + "(" + Codegen.FP + ")";
+        Codegen.generate(
+            Codegen.LA,
+            Codegen.T0,
+            address
+        );
+        Codegen.genPush(Codegen.T0);
+        return "";
+    }
+
     public String codeGen(PrintWriter p) {
-        return codeGen(p, Codegen.T0);
+        // push value onto stack
+        int off = 8 + mySym.getFuncOffSet();
+        Codegen.generate(
+            Codegen.LW,
+            Codegen.T1,
+            "-" + off + "(" + Codegen.FP + ")"
+        );
+        Codegen.genPush(Codegen.T1);
+        return "4(" + Codegen.SP + ")";
     }
 
     public String codeGen(PrintWriter p, String reg) {
@@ -2285,6 +2304,31 @@ class AssignNode extends ExpNode {
         p.print(" = ");
         myExp.unparse(p, 0);
         if (indent != -1)  p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        // get the location to store the result
+        String lhs = null;
+        if (myLhs instanceof IdNode) {
+            lhs = ((IdNode)myLhs).codeGenAssign(p);
+            Codegen.genPop(Codegen.T0);
+        } else {
+            // TODO do something
+        }
+        // store the value of the right exp
+        if (lhs != null) {
+            String rhs = myExp.codeGen(p);
+            // put the stack push result into a reg
+            Codegen.genPop(Codegen.T1);
+            // store address into t0
+            Codegen.generate(
+                Codegen.SW,
+                Codegen.T1,
+                "0(" + Codegen.T0 + ")"
+            );
+            return rhs;  // return the result if it is compound assignment
+        }
+        return null;  // TODO
     }
 
     // 2 kids

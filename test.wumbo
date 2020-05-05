@@ -1,23 +1,31 @@
-///int global;
-///int global2;
-
 void main() {
-    int local1;
-    int local2;
-    cout << "Here is an int!\n";
-    cout << 1203;
-    cout << "\nHere is false!\n";
-    cout << false;
-    cout << "\nHere is True!\n";
-    cout << true;
+
+    /// TEST GENERAL ASSIGNMENT AND DECLARATIONS
+    int val;
+    int val1;
+    bool val2;
+    bool val3;
+    int val4;
+
+    val = 1203;
+    cout << "Value of val: ";
+    cout << val;
+
+    val1 = val;
+    cout << "\nValue of val1: ";
+    cout << val1;
+
+    val2 = true;
+    cout << "\nValue of val2: ";
+    cout << val2;
+
+    val3 = false;
+    cout << "\nValue of val3: ";
+    cout << val3;
+
+    /// TEST multiply assigned values
+    val4 = val = val1;
+    cout << "\nValue of val4: ";
+    cout << val4;
+    cout << "\n";
 }
-
-
-
-///void func() {
-///    int local4;
-///    int local5;
-///}
-///
-///int global3;
-///bool global4;
