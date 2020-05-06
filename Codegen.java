@@ -58,6 +58,16 @@ public class Codegen {
     public static final String MFLO = "mflo";
     public static final String JR = "jr";
 
+    // logical op codes
+    public static final String AND = "and";
+    public static final String OR = "or";
+    public static final String SEQ = "seq";  // set on equal
+    public static final String SNE = "sne";  // set on not equal
+    public static final String SLT = "slt";
+    public static final String SLE = "sle";
+    public static final String SGT = "sgt";
+    public static final String SGE = "sge";
+
     public static final String BE = "be";
 
     public static final String SYSCALL = "syscall";

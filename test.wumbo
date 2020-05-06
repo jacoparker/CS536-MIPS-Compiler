@@ -52,5 +52,52 @@ void main() {
     cout << "\nValue of val1 / 2 (4 / 2)\n";
     val1 = val1 / 2;
     cout << val1;
+
+    /// TEST AND
+    cout << "\nValue of val2 AND true AND false (is false)\n";
+    cout << val2 && true && false;
+
+    /// TEST OR
+    cout << "\nValue of val2 OR true OR false (is true)\n";
+    cout << val2 || true || false;
+
+    /// TEST EQUALS
+    val2 = true;
+    cout << "\nValue of val2 == true (is true)\n";
+    cout << val2 == true;
+
+    /// TEST NOT EQUALS
+    val2 = true;
+    cout << "\nValue of val2 != true (is false)\n";
+    cout << val2 != true;
+
+    /// TEST LESS THAN
+    val = 1;
+    val1 = 10;
+    cout << "\nValue of val + 8 < val1 (is true)\n";
+    cout << val + 8 < val1;
+
+    /// TEST LESS THAN OR EQUALS
+    val = 1;
+    val1 = 10;
+    cout << "\nValue of val + 9 <= val1 (is true)\n";
+    cout << val + 9 <= val1;
+
+    /// TEST GREATER THAN
+    val = 1;
+    val1 = 10;
+    cout << "\nValue of val + 8 > val1 * 1 (is false)\n";
+    cout << val + 8 > val1 * 1;
+
+    /// TEST GREATER THAN OR EQUALS
+    val = 1;
+    val1 = 10;
+    cout << "\nValue of val + 9 >= val1 (is true)\n";
+    cout << val + 9 >= val1;
+
+    cout << "\nValue of val + 9 <= val1 (is true)\n";
+    cout << val + 9 <= val1;
+    
     cout << "\n";
+
 }

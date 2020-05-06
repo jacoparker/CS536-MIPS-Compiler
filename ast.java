@@ -2889,6 +2889,23 @@ class AndNode extends LogicalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.AND,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class OrNode extends LogicalExpNode {
@@ -2902,6 +2919,23 @@ class OrNode extends LogicalExpNode {
         p.print(" || ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.OR,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
 
@@ -2917,6 +2951,23 @@ class EqualsNode extends EqualityExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SEQ,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class NotEqualsNode extends EqualityExpNode {
@@ -2930,6 +2981,23 @@ class NotEqualsNode extends EqualityExpNode {
         p.print(" != ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SNE,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
 
@@ -2945,6 +3013,23 @@ class LessNode extends RelationalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SLT,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class GreaterNode extends RelationalExpNode {
@@ -2958,6 +3043,23 @@ class GreaterNode extends RelationalExpNode {
         p.print(" > ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SGT,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
 
@@ -2973,6 +3075,23 @@ class LessEqNode extends RelationalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SLE,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class GreaterEqNode extends RelationalExpNode {
@@ -2986,5 +3105,22 @@ class GreaterEqNode extends RelationalExpNode {
         p.print(" >= ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SLE,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
