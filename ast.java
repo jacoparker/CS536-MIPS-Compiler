@@ -589,6 +589,9 @@ class VarDeclNode extends DeclNode {
         myType.unparse(p, 0);
         p.print(" ");
         p.print(myId.name());
+        p.print(" (");
+        p.print(myId.sym().getFuncOffSet());
+        p.print(")");
         p.println(";");
     }
 
@@ -1371,7 +1374,7 @@ class WriteStmtNode extends StmtNode {
                 Codegen.SYSCALL,
                 "System call execute"
             );
-            Codegen.genPop(Codegen.T0);  // pop the scalar from the stack
+            // Codegen.genPop(Codegen.T0);  // pop the scalar from the stack
         }
     }
 
@@ -2570,6 +2573,16 @@ class NotNode extends UnaryExpNode {
         return retType;
     }
 
+    public String codeGen(PrintWriter p) {
+        // TODO
+        // branch if zero
+        // Codegen.generate(
+        //     Codegen.be,
+        // );
+        // set to zero if one, then branch out
+        return "";
+    }
+
     public void unparse(PrintWriter p, int indent) {
         p.print("(!");
         myExp.unparse(p, 0);
@@ -2743,6 +2756,23 @@ class PlusNode extends ArithmeticExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // add them!
+        Codegen.generate(
+            Codegen.ADD,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class MinusNode extends ArithmeticExpNode {
@@ -2756,6 +2786,23 @@ class MinusNode extends ArithmeticExpNode {
         p.print(" - ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // subtract them!
+        Codegen.generate(
+            Codegen.SUB,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
 
@@ -2772,6 +2819,27 @@ class TimesNode extends ArithmeticExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // add them!
+        Codegen.generate(
+            Codegen.MULT,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // move from lo to T1
+        Codegen.generate(
+            Codegen.MFLO,
+            Codegen.T1
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
+    }
 }
 
 class DivideNode extends ArithmeticExpNode {
@@ -2785,6 +2853,27 @@ class DivideNode extends ArithmeticExpNode {
         p.print(" / ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp1.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        myExp2.codeGen(p);
+        Codegen.genPop(Codegen.T3);
+        // add them!
+        Codegen.generate(
+            Codegen.DIV,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // move from lo to T1
+        Codegen.generate(
+            Codegen.MFLO,
+            Codegen.T1
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
+        return "";
     }
 }
 

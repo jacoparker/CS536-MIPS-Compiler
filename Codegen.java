@@ -39,6 +39,9 @@ public class Codegen {
     public static final String T0 = "$t0";
     public static final String T1 = "$t1";
     public static final String T2 = "$t2";
+    public static final String T3 = "$t3";
+
+    // op codes
     public static final String SW = "sw";
     public static final String LW = "lw";
     public static final String LI = "li";
@@ -47,10 +50,15 @@ public class Codegen {
     public static final String ADDU = "addu";
     public static final String ADDI = "addi";
     public static final String ADD = "add";
+    public static final String SUB = "sub";
+    public static final String MULT = "mult";
+    public static final String DIV = "div";
     public static final String MOVE = "move";
+    public static final String MFHI = "mfhi";
+    public static final String MFLO = "mflo";
     public static final String JR = "jr";
-    // public static final String T0 = "$t0";
-    // public static final String T1 = "$t1";
+
+    public static final String BE = "be";
 
     public static final String SYSCALL = "syscall";
 

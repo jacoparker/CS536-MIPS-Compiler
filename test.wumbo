@@ -1,5 +1,4 @@
 void main() {
-
     /// TEST GENERAL ASSIGNMENT AND DECLARATIONS
     int val;
     int val1;
@@ -24,15 +23,34 @@ void main() {
     cout << val3;
 
     /// TEST multiply assigned values
-    val4 = val = val1;
-    cout << "\nValue of val4: ";
-    cout << val4;
-
+ ///   val4 = val = val1;
+ ///   cout << "\nValue of val4: ";
+ ///   cout << val4;
+    val4 = 4;
 
     /// TEST post dec
     val4--;
-    cout << "\nValue of val4 post dec: ";
+    cout << "\nValue of val4 post dec (should be 3): ";
     cout << val4;
-    cout << "\n";
 
+    /// TEST ADD
+    cout << "\nValue of val1 + val1 (1203 + 1203)\n";
+    val1 = val1 + val1;
+    cout << val1;
+
+    /// TEST SUB
+    cout << "\nValue of val1 - val1\n";
+    cout << val1 - val1;
+
+    /// TEST MULT
+    val1 = 2;
+    cout << "\nValue of 2 * val1 (2 * 2)\n";
+    val1 = 2 * val1;
+    cout << val1;
+
+    /// TEST DIV
+    cout << "\nValue of val1 / 2 (4 / 2)\n";
+    val1 = val1 / 2;
+    cout << val1;
+    cout << "\n";
 }
