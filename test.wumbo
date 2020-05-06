@@ -27,5 +27,12 @@ void main() {
     val4 = val = val1;
     cout << "\nValue of val4: ";
     cout << val4;
+
+
+    /// TEST post dec
+    val4--;
+    cout << "\nValue of val4 post dec: ";
+    cout << val4;
     cout << "\n";
+
 }

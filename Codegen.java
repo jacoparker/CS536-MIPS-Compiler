@@ -38,13 +38,15 @@ public class Codegen {
     public static final String A0 = "$a0";
     public static final String T0 = "$t0";
     public static final String T1 = "$t1";
-
+    public static final String T2 = "$t2";
     public static final String SW = "sw";
     public static final String LW = "lw";
     public static final String LI = "li";
     public static final String LA = "la";
     public static final String SUBU = "subu";
     public static final String ADDU = "addu";
+    public static final String ADDI = "addi";
+    public static final String ADD = "add";
     public static final String MOVE = "move";
     public static final String JR = "jr";
     // public static final String T0 = "$t0";

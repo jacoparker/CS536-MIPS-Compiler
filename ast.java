@@ -1212,6 +1212,31 @@ class PostDecStmtNode extends StmtNode {
         p.println("--;");
     }
 
+    public void codeGen(PrintWriter p) {
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T1);
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T2,
+            "1"
+        );
+        // subtract one
+        Codegen.generate(
+            Codegen.SUBU,
+            Codegen.T1,
+            Codegen.T1,
+            Codegen.T2
+        );
+        // get the location of the address to store in
+        ((IdNode)myExp).codeGenAssign(p);
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate(
+            Codegen.SW,
+            Codegen.T1,
+            "0(" + Codegen.T0 + ")"
+        );
+    }
+
     // 1 kid
     private ExpNode myExp;
 }
@@ -2053,27 +2078,6 @@ class IdNode extends ExpNode {
         return "4(" + Codegen.SP + ")";
     }
 
-    public String codeGen(PrintWriter p, String reg) {
-        // if (mySym.isLocal()) {
-        //     int offset = mySym.getFuncOffSet() + 8;
-        //     Codegen.generateWithComment(
-        //         Codegen.LW, 
-        //         "Load the variable " + myStrVal, 
-        //         reg, 
-        //         "-" + offset + "(" + Codegen.SP + ")"
-        //     );
-        // } else {
-        //     Codegen.generateWithComment(
-        //         Codegen.LW, 
-        //         "Load the global variable " + myStrVal, 
-        //         reg, 
-        //         ""
-        //     );
-        // }
-
-        return "";
-    }
-
     private int myLineNum;
     private int myCharNum;
     private String myStrVal;
@@ -2518,6 +2522,26 @@ class UnaryMinusNode extends UnaryExpNode {
         p.print("(-");
         myExp.unparse(p, 0);
         p.print(")");
+    }
+
+    public String codeGen(PrintWriter p) {
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T1);
+        // subtract one
+        Codegen.generate(
+            Codegen.ADDI,
+            Codegen.T1,
+            "-1"
+        );
+        // get the location of the address to store in
+        ((IdNode)myExp).codeGenAssign(p);
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate(
+            Codegen.SW,
+            Codegen.T1,
+            Codegen.T0
+        );
+        return "";
     }
 }
 
