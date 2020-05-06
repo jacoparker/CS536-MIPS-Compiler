@@ -1180,6 +1180,31 @@ class PostIncStmtNode extends StmtNode {
         p.println("++;");
     }
 
+    public void codeGen(PrintWriter p) {
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T1);
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T2,
+            "1"
+        );
+        // subtract one
+        Codegen.generate(
+            Codegen.ADD,
+            Codegen.T1,
+            Codegen.T1,
+            Codegen.T2
+        );
+        // get the location of the address to store in
+        ((IdNode)myExp).codeGenAssign(p);
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate(
+            Codegen.SW,
+            Codegen.T1,
+            "0(" + Codegen.T0 + ")"
+        );
+    }
+
     // 1 kid
     private ExpNode myExp;
 }
@@ -1284,6 +1309,10 @@ class ReadStmtNode extends StmtNode {
         p.print("cin >> ");
         myExp.unparse(p, 0);
         p.println(";");
+    }
+
+    public void codeGen(PrintWriter p) {
+        // TODO don't want to do this now because may make testing harder
     }
 
     // 1 kid (actually can only be an IdNode or an ArrayExpNode)
@@ -1450,6 +1479,36 @@ class IfStmtNode extends StmtNode {
         p.println("}");
     }
 
+    public void codeGen(PrintWriter p) {
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);  // get result of the expression
+        // subtract one
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T3,
+            Codegen.TRUE
+        );
+        String label = Codegen.nextLabel();
+        Codegen.generate(
+            Codegen.BNE,
+            Codegen.T2,
+            Codegen.T3,
+            label
+        );
+        // generate code for the true statement
+        myDeclList.codeGen(p);
+        myStmtList.codeGen(p);
+        // write the label
+        Codegen.genLabel(label);
+    }
+
+    @Override
+    public void firstCodeGen(PrintWriter p) {
+        // if exp is string put into the hashtable
+        myDeclList.firstCodeGen(p);
+        myStmtList.firstCodeGen(p);
+    }
+
     // e kids
     private ExpNode myExp;
     private DeclListNode myDeclList;
@@ -1539,6 +1598,46 @@ class IfElseStmtNode extends StmtNode {
         p.println("}");
     }
 
+    public void codeGen(PrintWriter p) {
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);  // get result of the expression
+        // subtract one
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T3,
+            Codegen.TRUE
+        );
+        String label1 = Codegen.nextLabel();
+        String label2 = Codegen.nextLabel();
+        Codegen.generate(
+            Codegen.BNE,
+            Codegen.T2,
+            Codegen.T3,
+            label1
+        );
+        // generate code for the true statement
+        myThenDeclList.codeGen(p);
+        myThenStmtList.codeGen(p);
+        // jump statement to avoid else code
+        Codegen.generate(Codegen.J, label2);
+        // label for else statement
+        Codegen.genLabel(label1);
+        // generate code for the else statement
+        myElseDeclList.codeGen(p);
+        myElseStmtList.codeGen(p);
+        // write the label
+        Codegen.genLabel(label2);
+    }
+
+    @Override
+    public void firstCodeGen(PrintWriter p) {
+        // if exp is string put into the hashtable
+        myThenDeclList.firstCodeGen(p);
+        myThenStmtList.firstCodeGen(p);
+        myElseDeclList.firstCodeGen(p);
+        myElseStmtList.firstCodeGen(p);
+    }
+
     // 5 kids
     private ExpNode myExp;
     private DeclListNode myThenDeclList;
@@ -1604,6 +1703,43 @@ class WhileStmtNode extends StmtNode {
         myStmtList.unparse(p, indent+4);
         addIndentation(p, indent);
         p.println("}");
+    }
+
+    public void codeGen(PrintWriter p) {
+        String label1 = Codegen.nextLabel();  // head
+        Codegen.genLabel(label1);
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);  // get result of the expression
+        // subtract one
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T3,
+            Codegen.TRUE
+        );
+        String label2 = Codegen.nextLabel();  // break
+        Codegen.generate(
+            Codegen.BNE,
+            Codegen.T2,
+            Codegen.T3,
+            label2
+        );
+        // generate code for the loop body
+        myDeclList.codeGen(p);
+        myStmtList.codeGen(p);
+        // jump to loop beginning
+        Codegen.generate(
+            Codegen.J,
+            label1
+        );
+        // write the label
+        Codegen.genLabel(label2);
+    }
+
+    @Override
+    public void firstCodeGen(PrintWriter p) {
+        // if exp is string put into the hashtable
+        myDeclList.firstCodeGen(p);
+        myStmtList.firstCodeGen(p);
     }
 
     // 3 kids
@@ -1914,10 +2050,10 @@ class TrueNode extends ExpNode {
     public String codeGen(PrintWriter p) {
         Codegen.generate(
             Codegen.LI,
-            Codegen.T1,
+            Codegen.T2,
             Codegen.TRUE
         );
-        Codegen.genPush(Codegen.T1);
+        Codegen.genPush(Codegen.T2);
         return "4(" + Codegen.SP + ")";
     }
 

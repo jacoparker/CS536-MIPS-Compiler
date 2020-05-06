@@ -69,7 +69,10 @@ public class Codegen {
     public static final String SGE = "sge";
     public static final String XOR = "xor";
 
+    // branching op codes
     public static final String BE = "be";
+    public static final String BNE = "bne";
+    public static final String J = "j";
 
     public static final String SYSCALL = "syscall";
 

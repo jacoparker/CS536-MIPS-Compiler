@@ -104,7 +104,68 @@ void main() {
     cout << !true;
     cout << "\nValue of !val2 (is true)\n";
     cout << !val2;
-    
+
+    /// TEST THE HARD STUFF :(
+
+    /// TEST IF STATEMENT
+    cout << "\nTesting IF CONDITIONAL";
+    val1 = 10;
+    if (true) {
+        cout << "\nBasic conditional correct";
+        cout << "\nNext line should be 12\n";
+        cout << val1 + 2 + 0;
+    }
+    if (false) {
+        cout << "\nERROR: SHOULD NOT SEE THIS";
+    }
+    if (val1 == 10) {
+        cout << "\nConditional evaluated correctly";
+    }
+
+    /// TEST IF ELSE STATEMENT
+    cout << "\nTesting IF ELSE CONDITIONAL";
+    val1 = 10;
+    if (true) {
+        cout << "\nBasic conditional correct";
+        cout << "\nNext line should be 12\n";
+        cout << val1 + 2 + 0;
+    } else {
+        cout << "\nERROR: SHOULD NOT SEE THIS";
+    }
+    if (false) {
+        cout << "\nERROR: SHOULD NOT SEE THIS";
+    } else {
+        cout << "\nBasic if then else conditional correct";
+        cout << "\nNext line should be 0\n";
+        val3 = true;
+        cout << val3 || true && false;
+    }
+    val1 = 5;
+    val = val1 - 1;
+    if (val1 < val) {
+        cout << "\nERROR: SHOULD NOT SEE THIS";
+    } else {
+        cout << "\nNext line should be 1\n";
+        val3 = true;
+        cout << val3 || true || false || val1 == 5;
+    }
+
+    /// TEST WHILE STATEMENT
+    cout << "\nTesting WHILE CONDITIONAL";
+    val1 = 10;
+    cout << "\nShould see numbers from 10 to 1\n";
+    while (val1 > 0) {
+        cout << val1;
+        cout << "\n";
+        val1--;
+    }
+    cout << "\nShould see 2, 4, 8, 16\n";
+    val1 = 1;
+    while (val1 != 16) {
+        val1 = val1 * 2;
+        cout << val1;
+        cout << "\n";
+    }
     cout << "\n";
 
 }
