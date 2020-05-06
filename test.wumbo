@@ -97,6 +97,13 @@ void main() {
 
     cout << "\nValue of val + 9 <= val1 (is true)\n";
     cout << val + 9 <= val1;
+
+    /// TEST NOT
+    val2 = false;
+    cout << "\nValue of !true (is false)\n";
+    cout << !true;
+    cout << "\nValue of !val2 (is true)\n";
+    cout << !val2;
     
     cout << "\n";
 

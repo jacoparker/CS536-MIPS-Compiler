@@ -2574,12 +2574,22 @@ class NotNode extends UnaryExpNode {
     }
 
     public String codeGen(PrintWriter p) {
-        // TODO
-        // branch if zero
-        // Codegen.generate(
-        //     Codegen.be,
-        // );
-        // set to zero if one, then branch out
+        myExp.codeGen(p);  // push val on stack
+        Codegen.genPop(Codegen.T2);
+        Codegen.generate(
+            Codegen.LI,
+            Codegen.T3,
+            "1"
+        );
+        // subtract them!
+        Codegen.generate(
+            Codegen.XOR,
+            Codegen.T1,
+            Codegen.T2,
+            Codegen.T3
+        );
+        // push result to the stack
+        Codegen.genPush(Codegen.T1);
         return "";
     }
 

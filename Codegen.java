@@ -67,6 +67,7 @@ public class Codegen {
     public static final String SLE = "sle";
     public static final String SGT = "sgt";
     public static final String SGE = "sge";
+    public static final String XOR = "xor";
 
     public static final String BE = "be";
 
